@@ -13,7 +13,7 @@ import { usePath } from "~/hooks"
 import { Motion } from "@motionone/solid"
 import { isTocVisible, setTocDisabled } from "~/components"
 import { BiSolidBookContent } from "solid-icons/bi"
-
+import { FiSearch } from "solid-icons/fi"
 export const Right = () => {
   const { isOpen, onToggle } = createDisclosure({
     defaultIsOpen: localStorage.getItem("more-open") === "true",
@@ -141,6 +141,18 @@ export const Right = () => {
               tips="local_settings"
               onClick={() => {
                 bus.emit("tool", "local_settings")
+              }}
+            />
+            <RightIcon
+              as={FiSearch}
+              tips="bt_search_web"
+              onClick={() => {
+                window.location.href =
+                  window.location.protocol +
+                  "//" +
+                  window.location.host +
+                  "/@bt_search#" +
+                  window.location.pathname
               }}
             />
           </VStack>
