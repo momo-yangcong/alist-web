@@ -49,6 +49,13 @@ export const Right = () => {
             transition={{ duration: 0.2 }}
           >
             <RightIcon
+              as={RiSystemRefreshLine}
+              tips="refresh"
+              onClick={() => {
+                refresh(undefined, true)
+              }}
+            />
+            <RightIcon
               as={FiSearch}
               onClick={() => {
                 window.location.href =
