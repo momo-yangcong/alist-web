@@ -33,13 +33,40 @@ export const Right = () => {
       <Show
         when={isOpen()}
         fallback={
-          <RightIcon
-            class="toolbar-toggle"
-            as={CgMoreO}
-            onClick={() => {
-              onToggle()
-            }}
-          />
+          <VStack
+            class="left-toolbar"
+            p="$1"
+            rounded="$lg"
+            spacing="$1"
+            // shadow="0px 10px 30px -5px rgba(0, 0, 0, 0.3)"
+            // bgColor={useColorModeValue("white", "$neutral4")()}
+            bgColor="$neutral1"
+            as={Motion.div}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            // @ts-ignore
+            transition={{ duration: 0.2 }}
+          >
+            <RightIcon
+              as={FiSearch}
+              onClick={() => {
+                window.location.href =
+                  window.location.protocol +
+                  "//" +
+                  window.location.host +
+                  "/@bt_search#" +
+                  window.location.pathname
+              }}
+            />
+            <RightIcon
+              class="toolbar-toggle"
+              as={CgMoreO}
+              onClick={() => {
+                onToggle()
+              }}
+            />
+          </VStack>
         }
       >
         <VStack
@@ -141,18 +168,6 @@ export const Right = () => {
               tips="local_settings"
               onClick={() => {
                 bus.emit("tool", "local_settings")
-              }}
-            />
-            <RightIcon
-              as={FiSearch}
-              tips="bt_search_web"
-              onClick={() => {
-                window.location.href =
-                  window.location.protocol +
-                  "//" +
-                  window.location.host +
-                  "/@bt_search#" +
-                  window.location.pathname
               }}
             />
           </VStack>
