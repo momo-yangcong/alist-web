@@ -7,7 +7,7 @@ import {
   HStack,
   Switch,
 } from "@hope-ui/solid"
-import { For, JSXElement } from "solid-js"
+import { createSignal, For, JSXElement } from "solid-js"
 import { useRouter, useLink, useT } from "~/hooks"
 import { objStore } from "~/store"
 import { ObjType } from "~/types"
@@ -97,6 +97,7 @@ export const VideoBox = (props: {
     autoNext = "true"
   }
   props.onAutoNextChange(autoNext === "true")
+  const [showPlayers, setShowPlayers] = createSignal(true)
   return (
     <VStack w="$full" spacing="$2">
       {props.children}
@@ -124,30 +125,38 @@ export const VideoBox = (props: {
           {t("home.preview.auto_next")}
         </Switch>
       </HStack>
-      <Flex wrap="wrap" gap="$1" justifyContent="center">
-        <For each={players}>
-          {(item) => {
-            return (
-              <Tooltip placement="top" withArrow label={item.name}>
-                <Anchor
-                  // external
-                  href={convertURL(item.scheme, {
-                    raw_url: objStore.raw_url,
-                    name: objStore.obj.name,
-                    d_url: currentObjLink(true),
-                  })}
-                >
-                  <Image
-                    m="0 auto"
-                    boxSize="$8"
-                    src={`${window.__dynamic_base__}/images/${item.icon}.webp`}
-                  />
-                </Anchor>
-              </Tooltip>
-            )
-          }}
-        </For>
-      </Flex>
+      <Switch
+        checked={showPlayers()}
+        onChange={() => setShowPlayers(!showPlayers())}
+      >
+        {t("home.preview.show_players")}
+      </Switch>
+      {showPlayers() && (
+        <Flex wrap="wrap" gap="$1" justifyContent="center">
+          <For each={players}>
+            {(item) => {
+              return (
+                <Tooltip placement="top" withArrow label={item.name}>
+                  <Anchor
+                    // external
+                    href={convertURL(item.scheme, {
+                      raw_url: objStore.raw_url,
+                      name: objStore.obj.name,
+                      d_url: currentObjLink(true),
+                    })}
+                  >
+                    <Image
+                      m="0 auto"
+                      boxSize="$8"
+                      src={`${window.__dynamic_base__}/images/${item.icon}.webp`}
+                    />
+                  </Anchor>
+                </Tooltip>
+              )
+            }}
+          </For>
+        </Flex>
+      )}
     </VStack>
   )
 }

@@ -64,7 +64,7 @@ const Preview = () => {
     pip: true,
     mutex: true,
     fullscreen: true,
-    fullscreenWeb: true,
+    fullscreenWeb: false,
     subtitleOffset: true,
     miniProgressBar: false,
     playsInline: true,
