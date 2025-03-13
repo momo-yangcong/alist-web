@@ -1,6 +1,7 @@
 import { Text, useColorModeValue, VStack } from "@hope-ui/solid"
 import {
   createEffect,
+  createMemo,
   createSignal,
   lazy,
   Match,
@@ -9,11 +10,11 @@ import {
   Switch,
 } from "solid-js"
 import { Error, FullLoading, LinkWithBase } from "~/components"
-import { resetGlobalPage, useObjTitle, usePath, useRouter, useT } from "~/hooks"
+import { useObjTitle, usePath, useRouter, useT } from "~/hooks"
 import {
+  getPagination,
   objStore,
   password,
-  recordHistory,
   setPassword,
   /*layout,*/ State,
 } from "~/store"
@@ -27,23 +28,21 @@ const Password = lazy(() => import("./Password"))
 const [objBoxRef, setObjBoxRef] = createSignal<HTMLDivElement>()
 export { objBoxRef }
 
-let first = true
 export const Obj = () => {
   const t = useT()
   const cardBg = useColorModeValue("white", "$neutral3")
-  const { pathname } = useRouter()
+  const { pathname, searchParams } = useRouter()
   const { handlePathChange, refresh } = usePath()
-  let lastPathname = pathname()
+  const pagination = getPagination()
+  const page = createMemo(() => {
+    return pagination.type === "pagination"
+      ? parseInt(searchParams["page"]) || 1
+      : undefined
+  })
   createEffect(
-    on(pathname, (pathname) => {
+    on([pathname, page], async ([pathname, page]) => {
       useObjTitle()
-      if (!first) {
-        recordHistory(lastPathname)
-        resetGlobalPage()
-      }
-      first = false
-      handlePathChange(pathname)
-      lastPathname = pathname
+      await handlePathChange(pathname, page)
     }),
   )
   return (
