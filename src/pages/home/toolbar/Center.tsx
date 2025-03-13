@@ -1,6 +1,13 @@
 import { Box, HStack, useColorModeValue } from "@hope-ui/solid"
 import { createMemo, For, Show } from "solid-js"
-import { checkboxOpen, haveSelected, objStore, selectAll, State } from "~/store"
+import {
+  checkboxOpen,
+  haveSelected,
+  objStore,
+  selectAll,
+  selectedExsitArchiveFile,
+  State,
+} from "~/store"
 import { CopyLink } from "./CopyLink"
 import { CenterIcon } from "./Icon"
 import { bus } from "~/utils"
@@ -53,6 +60,14 @@ export const Center = () => {
                 )
               }}
             </For>
+            <Show when={selectedExsitArchiveFile()}>
+              <CenterIcon
+                name={"decompress"}
+                onClick={() => {
+                  bus.emit("tool", "decompress")
+                }}
+              />
+            </Show>
             <CopyLink />
             <Download />
             <CenterIcon

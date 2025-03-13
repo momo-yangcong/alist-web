@@ -11,6 +11,7 @@ import { bus, fsArchiveDecompress, handleRespWithNotifySuccess } from "~/utils"
 import { batch, createSignal, onCleanup } from "solid-js"
 import { ModalFolderChoose } from "~/components"
 import { selectedObjs } from "~/store"
+import { isArchive } from "~/store/archive"
 
 export const Decompress = () => {
   const t = useT()
@@ -56,10 +57,17 @@ export const Decompress = () => {
   const getPathAndName = () => {
     let path = pathname()
     if (innerPath() === "/") {
-      return { path: path, name: selectedObjs()[0].name }
+      let names = selectedObjs()
+        .filter((obj) => !obj.is_dir && isArchive(obj.name))
+        .map((obj) => obj.name)
+      return { path: path, name: null, names: names }
     } else {
       let idx = path.lastIndexOf("/")
-      return { path: path.slice(0, idx), name: path.slice(idx + 1) }
+      return {
+        path: path.slice(0, idx),
+        name: path.slice(idx + 1),
+        names: null,
+      }
     }
   }
   return (
@@ -69,11 +77,13 @@ export const Decompress = () => {
       onClose={onClose}
       loading={loading()}
       onSubmit={async (dst) => {
-        const { path, name } = getPathAndName()
+        const { path, name, names } = getPathAndName()
+        console.log("path:", path, "name:", name, "names:", names)
         const resp = await ok(
           path,
           dst,
           name,
+          names,
           archivePass(),
           innerPath(),
           cacheFull(),

@@ -6,6 +6,7 @@ import { Obj, StoreObj } from "~/types"
 import { bus, log } from "~/utils"
 import { keyPressed } from "./key-event"
 import { local } from "./local_settings"
+import { isArchive } from "~/store/archive"
 
 export enum State {
   Initial, // Initial state
@@ -172,6 +173,10 @@ export const selectAll = (checked: boolean) => {
 
 export const selectedObjs = () => {
   return objStore.objs.filter((obj) => obj.selected)
+}
+
+export const selectedExsitArchiveFile = () => {
+  return selectedObjs().some((obj) => !obj.is_dir && isArchive(obj.name))
 }
 
 export const allChecked = () => {

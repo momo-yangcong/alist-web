@@ -11,6 +11,7 @@ import {
   haveSelected,
   me,
   oneChecked,
+  selectedExsitArchiveFile,
   selectedObjs,
 } from "~/store"
 import { players } from "../previews/video_box"
@@ -64,17 +65,13 @@ export const ContextMenu = () => {
           </Item>
         )}
       </For>
-      <Show when={oneChecked()}>
+      <Show when={haveSelected()}>
         <Item
           hidden={() => {
             const index = UserPermissions.findIndex(
               (item) => item === "decompress",
             )
-            return (
-              !UserMethods.can(me(), index) ||
-              selectedObjs()[0].is_dir ||
-              !isArchive(selectedObjs()[0].name)
-            )
+            return !UserMethods.can(me(), index) || !selectedExsitArchiveFile()
           }}
           onClick={() => {
             bus.emit("tool", "decompress")
