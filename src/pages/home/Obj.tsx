@@ -15,6 +15,7 @@ import {
   getPagination,
   objStore,
   password,
+  recordHistory,
   setPassword,
   /*layout,*/ State,
 } from "~/store"
@@ -36,11 +37,18 @@ export const Obj = () => {
   const pagination = getPagination()
   const page = createMemo(() => {
     return pagination.type === "pagination"
-      ? parseInt(searchParams["page"]) || 1
+      ? parseInt(searchParams["page"], 10) || 1
       : undefined
   })
+  let lastPathname: string
+  let lastPage: number | undefined
   createEffect(
     on([pathname, page], async ([pathname, page]) => {
+      if (lastPathname) {
+        recordHistory(lastPathname, lastPage)
+      }
+      lastPathname = pathname
+      lastPage = page
       useObjTitle()
       await handlePathChange(pathname, page)
     }),
